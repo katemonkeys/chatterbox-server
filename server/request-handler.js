@@ -6,12 +6,16 @@
 var message1 = {
   username: "banana",
   text: "HELLO",
-  roomname: "LOBBY"
+  roomname: "LOBBY",
+  createdAt: new Date(),
+  updatedAt: new Date()
 };
 var message2 = {
   username: "otheruser",
   text: "GODBYE",
-  roomname: "LOBBY"
+  roomname: "LOBBY",
+  createdAt: new Date(),
+  updatedAt: new Date()
 };
 
 var messages = [message1, message2];
@@ -22,17 +26,19 @@ exports.handleRequest = function(request, response) {
   //if post request, creating new room or new user
   //if delete, remove and update
   //if put, adding to messages array
-  if (request.method === "GET" && request.url === '/1/classes/chatterbox'){
+  if (request.method === "GET"){
     console.log("GET request successful");
-    return messages.toString();
+    return JSON.stringify({results: messages});
     //response.writeHead(200, {'content-type': 'application/json'});
     //response.write({banana: "more bananas"});
     //response.end("HELLO WORLD!!!");
   }
-  if (request.method === "POST" && request.url === '/1/classes/chatterbox'){
+  if (request.method === "POST"){
     request.on('data',function(chunk) {
-      messages.push(JSON.parse(chunk.toString()));
-      console.log(messages[2].username);
+      var newMessage = JSON.parse(chunk.toString());
+      newMessage['updatedAt'] = new Date();
+      newMessage['createdAt'] = new Date();
+      messages.push(newMessage);
       console.log("number of messages "+messages.length);
     });
     // console.log(request.headers['content-type']);

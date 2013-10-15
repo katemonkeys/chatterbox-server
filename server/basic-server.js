@@ -1,18 +1,7 @@
 /* Import node's http module: */
 var http = require("http");
 var handle = require('./request-handler');
-// var message1 = {
-//   username: "banana",
-//   text: "HELLO",
-//   roomname: "LOBBY"
-// };
-// var message2 = {
-//   username: "otheruser",
-//   text: "GODBYE",
-//   roomname: "LOBBY"
-// };
 
-// var messages = [message1, message2];
 /* This is the callback function that will be called each time a
  * client (i.e.. a web browser) makes a request to our server. */
 var requestListener = function (request, response) {
@@ -22,8 +11,9 @@ var requestListener = function (request, response) {
    * requesting. */
   console.log("Serving request type " + request.method + " for url " + request.url);
   var text = handle.handleRequest(request, response);
+  console.log("THIS IS THE TEXT");
   console.log(text);
-  /* "Status code" and "headers" are HTTP concepts that you can
+    /* "Status code" and "headers" are HTTP concepts that you can
    * research on the web as and when it becomes necessary. */
   var statusCode = 200;
 
