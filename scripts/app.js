@@ -53,10 +53,12 @@ var updateMessages = function() {
   $.ajax({
     url: 'http://localhost:8080/1/classes/chatterbox',
     type: 'GET',
-    contentType: 'application/json',
+    contentType: 'text/plain',
     data: {order: '-createdAt',
       limit: 25},
     success: function (data) {
+      data = JSON.parse(data);
+      console.log(data);
       displayMessages(data.results);
     },
     error: function (data) {
