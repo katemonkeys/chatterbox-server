@@ -17,36 +17,44 @@ var message2 = {
   createdAt: new Date(),
   updatedAt: new Date()
 };
+var defaultCorsHeaders = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "access-control-allow-headers": "content-type, accept",
+  "access-control-max-age": 10 // Seconds.
+};
+var headers = defaultCorsHeaders;
+headers['Content-Type'] = "text/plain";
 
 var messages = [message1, message2];
 
-exports.handleRequest = function(request, response) {
-  //if get, return 25 most recent entries in array
-  //  --messages in an array full of objects (data like )
-  //if post request, creating new room or new user
-  //if delete, remove and update
-  //if put, adding to messages array
-  if (request.method === "GET"){
-    console.log("GET request successful");
-    return JSON.stringify({results: messages});
-    //response.writeHead(200, {'content-type': 'application/json'});
-    //response.write({banana: "more bananas"});
-    //response.end("HELLO WORLD!!!");
+
+var handleRequest = function(request, response) {
+  console.log(headers);
+  var value;
+  var found = false;
+  if (request.method === "GET" && (request.url).match(/\/1\/classes\/chatterbox/g)){
+    found = true;
+    statusCode = 200;
+    value =  JSON.stringify({results: messages});
   }
-  if (request.method === "POST"){
+  if (request.method === "POST" && (request.url).match(/\/1\/classes\/chatterbox/g)){
+    found = true;
     request.on('data',function(chunk) {
+      statusCode = 201;
       var newMessage = JSON.parse(chunk.toString());
       newMessage['updatedAt'] = new Date();
       newMessage['createdAt'] = new Date();
       messages.push(newMessage);
       console.log("number of messages "+messages.length);
     });
-    // console.log(request.headers['content-type']);
-    // messages.push(request.data);
-    console.log("from a post request");
-
   }
-  console.log(request.headers);
-  console.log(request.url);
-  //var contentType = response.getHeader('content-type');
+  response.writeHead(statusCode, headers);
+  console.log(response.headers);
+  // if (!found){
+  //   response.writeHead(404, headers);
+  // }
+  response.end(value);
 };
+
+module.exports = handleRequest;
