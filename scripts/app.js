@@ -46,7 +46,7 @@ var displayMessages = function (data) {
     }
   });
   hasRun = true;
-  latestMessageTimestamp = (new Date(data[0].updatedAt)).getTime();
+  latestMessageTimestamp = (new Date(data[data.length-1].updatedAt)).getTime();
 };
 
 var updateMessages = function() {
@@ -59,7 +59,7 @@ var updateMessages = function() {
     success: function (data) {
       data = JSON.parse(data);
       console.log(data);
-      displayMessages(data.results);
+      displayMessages(data);
     },
     error: function (data) {
       console.error('chatterbox: Failed to send message');
@@ -82,6 +82,8 @@ var sendMessage = function(username, msg) {
     contentType: 'application/json',
     success: function (response) {
       console.log('chatterbox: Message sent');
+      $('input').val("");
+      updateMessages();
     },
     error: function (response) {
       // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
