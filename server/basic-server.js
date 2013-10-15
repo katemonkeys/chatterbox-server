@@ -1,6 +1,18 @@
 /* Import node's http module: */
 var http = require("http");
+var handle = require('./request-handler');
+// var message1 = {
+//   username: "banana",
+//   text: "HELLO",
+//   roomname: "LOBBY"
+// };
+// var message2 = {
+//   username: "otheruser",
+//   text: "GODBYE",
+//   roomname: "LOBBY"
+// };
 
+// var messages = [message1, message2];
 /* This is the callback function that will be called each time a
  * client (i.e.. a web browser) makes a request to our server. */
 var requestListener = function (request, response) {
@@ -9,7 +21,8 @@ var requestListener = function (request, response) {
    * about the client request - such as what URL the browser is
    * requesting. */
   console.log("Serving request type " + request.method + " for url " + request.url);
-
+  var text = handle.handleRequest(request, response);
+  console.log(text);
   /* "Status code" and "headers" are HTTP concepts that you can
    * research on the web as and when it becomes necessary. */
   var statusCode = 200;
@@ -27,12 +40,12 @@ var requestListener = function (request, response) {
   response.writeHead(statusCode, headers);
   /* .writeHead() tells our server what HTTP status code to send back
    * to the client, and what headers to include on the response. */
-
+  // response.write(text.toString());
   /* Make sure to always call response.end() - Node will not send
    * anything back to the client until you do. The string you pass to
    * response.end() will be the body of the response - i.e. what shows
    * up in the browser.*/
-  response.end("Hello, World!");
+  response.end(text);
 };
 
 /* These headers will allow Cross-Origin Resource Sharing.
